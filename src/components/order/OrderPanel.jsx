@@ -1,19 +1,19 @@
-import { Clock, Trash2, Receipt, CreditCard, Banknote, Split, Send } from 'lucide-react';
+import { Clock, Trash2, Receipt, CreditCard, Banknote, Split, Send, User, ArrowLeftRight, Percent, MessageSquare, RotateCcw } from 'lucide-react';
 import { format } from 'date-fns';
 import OrderItemList from './OrderItemList';
 import OrderSummary from './OrderSummary';
 
-export default function OrderPanel({ 
-	selectedTable, 
-	currentOrder, 
-	onUpdateQuantity, 
-	onRemove, 
-	onClearOrder, 
-	onOpenDiscount, 
-	onOpenPayment, 
-	onSendToKitchen, 
+export default function OrderPanel({
+	selectedTable,
+	currentOrder,
+	onUpdateQuantity,
+	onRemove,
+	onClearOrder,
+	onOpenDiscount,
+	onOpenPayment,
+	onSendToKitchen,
 	loadData,
-	isProcessingPayment // YENİ prop
+	isProcessingPayment
 }) {
 	if (!selectedTable) {
 		return (
@@ -23,21 +23,18 @@ export default function OrderPanel({
 		);
 	}
 
-	// Pending məhsullar var mı? (Mətbəxə göndərilməmiş)
 	const hasPendingItems = currentOrder?.items?.some(item => item.status === 'pending');
-	
-	// Mətbəxə göndərmə şərti
-	const canSendToKitchen = currentOrder && 
-		currentOrder?.items?.length > 0 && 
+
+	const canSendToKitchen = currentOrder &&
+		currentOrder?.items?.length > 0 &&
 		hasPendingItems;
 
-	// Tarix formatı - null/undefined check
 	const getFormattedTime = () => {
 		if (!currentOrder) return '--:--';
-		
+
 		const timeValue = currentOrder.started_at || currentOrder.startedAt;
 		if (!timeValue) return '--:--';
-		
+
 		try {
 			return format(new Date(timeValue), 'HH:mm');
 		} catch (error) {
@@ -48,16 +45,54 @@ export default function OrderPanel({
 
 	return (
 		<div className='flex flex-col h-full'>
-			{/* Header */}
-			<div className='bg-white border-b border-gray-200 p-3'>
-				<div className='flex items-center justify-between mb-1'>
-					<h3 className='text-lg font-semibold text-gray-800'>Masa {selectedTable.table_number}</h3>
+			<div className='bg-white border-b border-gray-200 p-2'>
+				<div className='flex items-center justify-between mb-2'>
+					<h3 className='text-base font-semibold text-gray-800'>Masa {selectedTable.table_number}</h3>
 					<button
 						onClick={onClearOrder}
 						disabled={isProcessingPayment}
 						className='px-2 py-1 text-xs border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50'
 					>
 						Təmizlə
+					</button>
+				</div>
+
+				<div className='grid grid-cols-5 gap-1'>
+					<button
+						disabled={isProcessingPayment}
+						className='flex flex-col items-center justify-center p-2 border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50'
+					>
+						<User className='w-4 h-4 mb-1' />
+						<span className='text-xs'>Müştəri</span>
+					</button>
+					<button
+						disabled={isProcessingPayment}
+						className='flex flex-col items-center justify-center p-2 border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50'
+					>
+						<ArrowLeftRight className='w-4 h-4 mb-1' />
+						<span className='text-xs'>Transfer</span>
+					</button>
+					<button
+						onClick={onOpenDiscount}
+						disabled={isProcessingPayment}
+						className='flex flex-col items-center justify-center p-2 border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50'
+					>
+						<Percent className='w-4 h-4 mb-1' />
+						<span className='text-xs'>Endirim</span>
+					</button>
+					<button
+						disabled={isProcessingPayment}
+						className='flex flex-col items-center justify-center p-2 border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50'
+					>
+						<MessageSquare className='w-4 h-4 mb-1' />
+						<span className='text-xs'>Qeyd</span>
+					</button>
+					<button
+						disabled={isProcessingPayment}
+						className='flex flex-col items-center justify-center p-2 border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50'
+					>
+						<RotateCcw className='w-4 h-4 mb-1' />
+						<span className='text-xs'>İadə</span>
 					</button>
 				</div>
 			</div>
@@ -71,30 +106,19 @@ export default function OrderPanel({
 				/>
 			</div>
 
-			{/* Actions */}
 			{currentOrder && currentOrder.items?.length > 0 && (
-				<div className='border-t border-gray-200 p-4 space-y-4 bg-white'>
+				<div className='border-t border-gray-200 p-4 space-y-3 bg-white'>
 					<OrderSummary order={currentOrder} />
-					
-					<div className='grid grid-cols-4 gap-2'>
-						<button
-							onClick={onOpenDiscount}
-							disabled={isProcessingPayment}
-							className='px-2 py-2 text-xs border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50'
-						>
-							Endirim
-						</button>
 
-						{canSendToKitchen && (
-							<button
-								onClick={() => onSendToKitchen(currentOrder, selectedTable, loadData)}
-								disabled={isProcessingPayment}
-								className='px-2 py-2 text-xs border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50'
-							>
-								Mətbəx
-							</button>
-						)}
-					</div>
+					{canSendToKitchen && (
+						<button
+							onClick={() => onSendToKitchen(currentOrder, selectedTable, loadData)}
+							disabled={isProcessingPayment}
+							className='w-full py-2 text-sm border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50'
+						>
+							Mətbəxə göndər
+						</button>
+					)}
 
 					<div className='grid grid-cols-3 gap-2'>
 						<button
@@ -114,7 +138,7 @@ export default function OrderPanel({
 						<button
 							onClick={() => onOpenPayment('mixed')}
 							disabled={isProcessingPayment}
-							className='py-3 px-2 text-sm bg-white border-2 border-purple-500 text-purple-600 rounded hover:bg-purple-50 font-medium disabled:opacity-50'
+							className='py-3 px-2 text-sm bg-white border-2 border-orange-500 text-orange-600 rounded hover:bg-orange-50 font-medium disabled:opacity-50'
 						>
 							Qarışıq
 						</button>

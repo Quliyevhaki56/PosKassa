@@ -1,6 +1,35 @@
 import { Users, Square, Circle, Triangle, Hexagon, Table } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { supabase } from '../../lib/supabase';
 
 export default function TableCard({ table, isSelected, onSelect }) {
+	const [orderTotal, setOrderTotal] = useState(null);
+
+	useEffect(() => {
+		if (table.status === 'occupied') {
+			loadOrderTotal();
+		} else {
+			setOrderTotal(null);
+		}
+	}, [table.status, table.id]);
+
+	const loadOrderTotal = async () => {
+		try {
+			const { data, error } = await supabase
+				.from('orders')
+				.select('total_amount')
+				.eq('table_id', table.id)
+				.not('status', 'in', '(completed,cancelled)')
+				.maybeSingle();
+
+			if (data && !error) {
+				setOrderTotal(data.total_amount);
+			}
+		} catch (error) {
+			console.error('Error loading order total:', error);
+		}
+	};
+
 	const getStatusColor = () => {
 		switch (table.status) {
 			case 'empty':
@@ -28,7 +57,7 @@ export default function TableCard({ table, isSelected, onSelect }) {
 	};
 
 	const getShapeIcon = () => {
-		const iconProps = { className: 'w-12 h-12', strokeWidth: 1.5 };
+		const iconProps = { className: 'w-10 h-10', strokeWidth: 1.5 };
 		switch (table.shape?.toLowerCase()) {
 			case 'square':
 				return <Square {...iconProps} />;
@@ -47,19 +76,24 @@ export default function TableCard({ table, isSelected, onSelect }) {
 		<button
 			onClick={() => onSelect(table.id)}
 			className={`
-        p-4 rounded-lg border-2 transition-all
+        p-3 rounded-lg border-2 transition-all
         ${getStatusColor()}
         ${isSelected ? 'ring-4 ring-blue-500 shadow-lg' : 'shadow'}
       `}
 		>
 			<div className='flex flex-col items-center space-y-2'>
 				<div className='text-gray-700'>{getShapeIcon()}</div>
-				<div className='text-2xl font-bold text-gray-800'>{table.table_number}</div>
-				<div className='flex items-center text-sm text-gray-600'>
-					<Users className='w-4 h-4 mr-1' />
+				<div className='text-xl font-bold text-gray-800'>{table.table_number}</div>
+				<div className='flex items-center text-xs text-gray-600'>
+					<Users className='w-3 h-3 mr-1' />
 					<span>{table.capacity} nəfər</span>
 				</div>
 				<div className='text-xs font-medium text-gray-700'>{getStatusText()}</div>
+				{orderTotal && orderTotal > 0 && (
+					<div className='text-sm font-bold text-blue-600 mt-1'>
+						{orderTotal.toFixed(2)} AZN
+					</div>
+				)}
 			</div>
 		</button>
 	);

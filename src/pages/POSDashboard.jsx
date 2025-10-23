@@ -193,9 +193,18 @@ export default function POSDashboard() {
 		try {
 			if (currentOrder && currentOrder.items?.length > 0 && currentOrder.id) {
 				await updateTableOrder(restaurant.id, selectedTable.id, currentOrder);
+			} else if (selectedTable && (!currentOrder || !currentOrder.items || currentOrder.items.length === 0)) {
+				await supabase
+					.from('tables')
+					.update({
+						status: 'empty',
+						updated_at: new Date().toISOString()
+					})
+					.eq('id', selectedTable.id);
 			}
 			dispatch(selectTable(null));
 			dispatch(setCurrentOrder(null));
+			await loadData();
 		} catch (error) {
 			console.error('Error:', error);
 		}
@@ -558,6 +567,23 @@ const handleCompletePayment = async (paymentDetails) => {
 						{selectedTable && (
 							<div className='px-2 py-1 bg-gray-100 rounded text-sm font-medium'>
 								{selectedTable.table_number}
+							</div>
+						)}
+						{!selectedTable && halls.length > 0 && (
+							<div className='flex items-center space-x-2'>
+								{halls.map((hall) => (
+									<button
+										key={hall.id}
+										onClick={() => handleHallChange(hall.id)}
+										className={`px-4 py-2 text-sm font-medium rounded transition-colors ${
+											activeHall === hall.id
+												? 'bg-blue-600 text-white'
+												: 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+										}`}
+									>
+										{hall.name}
+									</button>
+								))}
 							</div>
 						)}
 					</div>

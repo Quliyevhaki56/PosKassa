@@ -306,7 +306,7 @@ export const handleSendToKitchen = async (currentOrder, selectedTable, loadData)
 
 		const updatedItems = currentOrder.items.map(item => {
 			if (!item.status || item.status === 'pending') {
-				return { ...item, status: 'sent' };
+				return { ...item, status: 'sent_to_kitchen' };
 			}
 			return item;
 		});
@@ -322,7 +322,10 @@ export const handleSendToKitchen = async (currentOrder, selectedTable, loadData)
 
 		await supabase
 			.from('tables')
-			.update({ status: 'occupied' })
+			.update({
+				status: 'occupied',
+				updated_at: new Date().toISOString()
+			})
 			.eq('id', selectedTable.id);
 
 		toast.success('Sifariş mətbəxə göndərildi');
