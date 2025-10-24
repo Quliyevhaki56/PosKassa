@@ -70,7 +70,7 @@ export default function MenuGrid({
 	return (
 		<div className='flex flex-col h-full'>
 			<div className='flex-1 p-4'>
-				<div className='grid grid-cols-4 gap-4 h-full'> 
+				<div className='grid grid-cols-4 gap-4 h-full'>
 					{currentItems.map((item, index) => {
 						const isCategory = item.type === 'category' || item.type === 'subcategory';
 
@@ -87,7 +87,7 @@ export default function MenuGrid({
 							>
 								{item.data.image_url && !isCategory && (
 									<img
-										src={item.data.image_url}
+										src={item.data.image_url}zz
 										alt={item.data.name}
 										className='w-full h-24 object-cover mb-2 rounded'
 									/>
