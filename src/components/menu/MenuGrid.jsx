@@ -70,7 +70,7 @@ export default function MenuGrid({
 	return (
 		<div className='flex flex-col h-full'>
 			<div className='flex-1 p-4'>
-				<div className='grid grid-cols-4 gap-4 h-full'>
+				<div className='grid grid-cols-4 gap-4 h-full'>zz
 					{currentItems.map((item, index) => {
 						const isCategory = item.type === 'category' || item.type === 'subcategory';
 
@@ -107,7 +107,7 @@ export default function MenuGrid({
 					})}
 				</div>
 			</div>
- 
+
 			{totalPages > 1 && (
 				<div className='flex items-center justify-between px-4 py-3 border-t border-gray-200 bg-white'>
 					<button
