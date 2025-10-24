@@ -92,7 +92,7 @@ export default function MenuGrid({
 										className='w-full h-24 object-cover mb-2 rounded'
 									/>
 								)}
- 
+
 								<div className={`font-semibold text-lg ${isCategory ? 'text-white text-2xl' : 'text-gray-800'}`}>
 									{item.data.name}
 								</div>
@@ -107,7 +107,7 @@ export default function MenuGrid({
 					})}
 				</div>
 			</div>
-
+z
 			{totalPages > 1 && (
 				<div className='flex items-center justify-between px-4 py-3 border-t border-gray-200 bg-white'>
 					<button
