@@ -98,7 +98,7 @@ export default function MenuGrid({
 								</div>
 
 								{item.type === 'product' && (
-									<div className='text-sm font-bold text-gray-600 mt-1'>
+									<div className='text-xs md:text-sm font-bold text-gray-600 mt-1'>
 										{item.data.price.toFixed(2)} AZN
 									</div>
 								)}
