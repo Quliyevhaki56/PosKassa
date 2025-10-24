@@ -92,7 +92,7 @@ export default function MenuGrid({
 										className='w-full h-24 object-cover mb-2 rounded'
 									/>
 								)}
-zz
+ 
 								<div className={`font-semibold text-lg ${isCategory ? 'text-white text-2xl' : 'text-gray-800'}`}>
 									{item.data.name}
 								</div>
