@@ -80,7 +80,7 @@ export default function MenuGrid({
 								onClick={() => handleItemClick(item)}
 								className={`
 									relative rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow
-									flex flex-col items-center ${item.data.image ? null : "justify-center" } justify-center text-center
+									flex flex-col items-center ${item.data.image ? null : "justify-center"} justify-center text-center
 									${isCategory ? getCategoryColor(index) + ' text-white' : 'bg-white border border-gray-200 hover:border-gray-300'}
 								`}
 								style={{ aspectRatio: '1/1' }}
