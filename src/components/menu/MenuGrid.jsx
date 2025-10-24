@@ -75,15 +75,14 @@ export default function MenuGrid({
 						const isCategory = item.type === 'category' || item.type === 'subcategory';
 
 						return (
-							<div>
-                  <button
+							<button
 								key={`${item.type}-${item.data.id}`}
 								onClick={() => handleItemClick(item)}
 								className={`
 									relative rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow
 									flex flex-col items-center ${item.data.image ? null : "justify-center"} text-center
 									${isCategory ? getCategoryColor(index) + ' text-white' : 'bg-white border border-gray-200 hover:border-gray-300'}
-								`}
+								`} 
 								style={{ aspectRatio: '1/1' }}
 							>
 								{item.data.image && !isCategory && (
@@ -104,7 +103,6 @@ export default function MenuGrid({
 									</div>
 								)}
 							</button>
-              </div>
 						);
 					})}
 				</div>
