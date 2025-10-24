@@ -93,7 +93,7 @@ export default function MenuGrid({
 									/>
 								)}
 
-								<div className={`font-semibold text-xs lg-text-lg ${isCategory ? 'text-white lg-text-xl' : 'text-gray-800'}`}>
+								<div className={`font-semibold text-sm lg-text-lg ${isCategory ? 'text-white lg-text-xl' : 'text-gray-800'}`}>
 									{item.data.name}
 								</div>
 
