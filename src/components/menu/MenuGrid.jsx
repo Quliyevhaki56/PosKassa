@@ -89,7 +89,7 @@ export default function MenuGrid({
 									<img
 										src={item.data.image}
 										alt={item.data.name}
-										className='w-full xl:min-h-50 object-cover rounded'
+										className='w-full md:min-h-50 object-cover rounded'
 									/>
 								)}
 
