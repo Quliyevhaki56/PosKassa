@@ -87,7 +87,7 @@ export default function MenuGrid({
 							>
 								{item.data.image_url && !isCategory && (
 									<img
-										src={item.data.image_url}zz
+										src={item.data.image_url}
 										alt={item.data.name}
 										className='w-full h-24 object-cover mb-2 rounded'
 									/>
