@@ -9,7 +9,7 @@ export default function OrderItem({ item, onUpdateQuantity, onRemove }) {
 			isPending ? 'bg-green-50 border-2 border-green-200' : 'bg-gray-50 border border-gray-200'
 		}`}>
 			<div className='flex-1 min-w-0'>
-				<div className='text-sm font-medium text-gray-800 truncate'>{productName}s</div>
+				<div className='text-sm font-medium text-gray-800 truncate'>{productName} </div>
 				<div className='text-xs text-gray-600'>
 					{item.price.toFixed(2)} AZN
 					{item.status === 'sent_to_kitchen' && (
