@@ -85,7 +85,7 @@ export default function MenuGrid({
 								`}
 								style={{ aspectRatio: '1/1' }}
 							>
-								{item.data.image_url && !isCategory && (
+								{item.data.image && !isCategory && (
 									<img
 										src={item.data.image}
 										alt={item.data.name}
