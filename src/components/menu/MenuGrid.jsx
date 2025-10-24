@@ -89,11 +89,11 @@ export default function MenuGrid({
 									<img
 										src={item.data.image}
 										alt={item.data.name}
-										className='w-full object-cover mb-2 rounded'
+										className='w-full h-24  object-cover mb-2 rounded'
 									/>
 								)}
 
-								<div className={`font-semibold text-sm ${isCategory ? 'text-white text-2xl' : 'text-gray-800'}`}>
+								<div className={`font-semibold text-sm ${isCategory ? 'text-white text-xl' : 'text-gray-800'}`}>
 									{item.data.name}
 								</div>
 
