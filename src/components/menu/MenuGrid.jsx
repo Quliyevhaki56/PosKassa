@@ -94,7 +94,7 @@ export default function MenuGrid({
 								)}
 
 								<div className={`font-semibold text-lg ${isCategory ? 'text-white text-2xl' : 'text-gray-800'}`}>
-									{item.data.name}
+									{item.data.name}zz
 								</div>
 
 								{item.type === 'product' && (
