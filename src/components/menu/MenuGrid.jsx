@@ -80,25 +80,25 @@ export default function MenuGrid({
 								onClick={() => handleItemClick(item)}
 								className={`
 									relative rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow
-									flex flex-col items-center justify-center p-4 text-center
+									flex flex-col items-center ${item.data.image ? null : "justify-center"} text-center
 									${isCategory ? getCategoryColor(index) + ' text-white' : 'bg-white border border-gray-200 hover:border-gray-300'}
 								`}
 								style={{ aspectRatio: '1/1' }}
 							>
-								{item.data.image_url && !isCategory && (
+								{item.data.image && !isCategory && (
 									<img
-										src={item.data.image_url}
+										src={item.data.image}
 										alt={item.data.name}
-										className='w-full h-24 object-cover mb-2 rounded'
+										className='w-full xl:min-h-36 object-cover rounded'
 									/>
 								)}
 
-								<div className={`font-semibold text-lg ${isCategory ? 'text-white text-2xl' : 'text-gray-800'}`}>
+								<div className={`font-semibold md:text-xl ${isCategory ? 'text-white text-xs xl:text-xl' : 'text-gray-800'}`}>
 									{item.data.name}
 								</div>
 
 								{item.type === 'product' && (
-									<div className='text-sm font-bold text-gray-600 mt-1'>
+									<div className='text-xs md:text-sm font-bold text-gray-600 mt-1'>
 										{item.data.price.toFixed(2)} AZN
 									</div>
 								)}

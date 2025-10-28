@@ -24,7 +24,7 @@ export default function OrderPanel({
 	}
 
 	const hasPendingItems = currentOrder?.items?.some(item => item.status === 'pending');
-
+  console.log(currentOrder)
 	const canSendToKitchen = currentOrder &&
 		currentOrder?.items?.length > 0 &&
 		hasPendingItems;
