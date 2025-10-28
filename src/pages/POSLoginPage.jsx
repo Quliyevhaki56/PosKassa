@@ -17,7 +17,7 @@ export default function POSLoginPage() {
 	const [lockoutUntil, setLockoutUntil] = useState(null);
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-
+  console.log(restaurantUsername)
 	useEffect(() => {
 		const savedLockout = localStorage.getItem('login_lockout');
 		if (savedLockout) {
