@@ -17,7 +17,7 @@ export default function POSLoginPage() {
 	const [lockoutUntil, setLockoutUntil] = useState(null);
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-  console.log(restaurantUsername)
+  
 	useEffect(() => {
 		const savedLockout = localStorage.getItem('login_lockout');
 		if (savedLockout) {
@@ -52,7 +52,7 @@ export default function POSLoginPage() {
 
 	const handleRestaurantSubmit = async (e) => {
 		e.preventDefault();
-
+console.log(restaurantUsername)
 		if (!restaurantUsername) {
 			toast.error('Restoran istifadəçi adını daxil edin');
 			return;
