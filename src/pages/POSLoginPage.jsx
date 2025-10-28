@@ -110,7 +110,7 @@ console.log(restaurantUsername)
 				.select('*')
 				.eq('restaurant_id', restaurant.id)
 				.eq('pin_code', pinCode)
-				.eq('role', 'waiter')
+				.eq('role', 'cashier') 
 				.eq('is_active', true)
 				.maybeSingle();
 
