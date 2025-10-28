@@ -67,6 +67,7 @@ console.log(restaurantUsername)
 				.maybeSingle();
 
 			if (error) {
+        console.log(restaurantUsername)
 				console.error('Database error:', error);
 				throw new Error('Verilənlər bazası xətası');
 			}
