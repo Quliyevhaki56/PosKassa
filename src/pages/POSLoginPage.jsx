@@ -217,7 +217,7 @@ console.log(restaurantUsername)
 
 	return (
 		<div className='min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center p-4'>
-			<div className='bg-white rounded-2xl shadow-2xl overflow-hidden w-full max-w-5xl flex' style={{ height: '650px' }}>
+			<div className='bg-white rounded-2xl shadow-2xl overflow-hidden w-full max-w-5xl flex' style={{ height: '600px' }}>
 				<div className='w-3/5 bg-gray-100 flex items-center justify-center p-8'>
 					{restaurant?.logo ? (
 						<img
