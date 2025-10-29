@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { LogOut, Clock, Printer, ArrowLeft } from 'lucide-react';
+import { LogOut, Clock, Printer, ArrowLeft, Lock } from 'lucide-react';
 import { useReactToPrint } from 'react-to-print';
 import toast from 'react-hot-toast';
 import {
@@ -40,6 +40,8 @@ import MenuGrid from '../components/menu/MenuGrid';
 import OrderPanel from '../components/order/OrderPanel';
 import DiscountModal from '../components/modals/DiscountModal';
 import PaymentModal from '../components/modals/PaymentModal';
+import TransferModal from '../components/modals/TransferModal';
+import CommentModal from '../components/modals/CommentModal';
 import Receipt from '../components/receipt/Receipt';
 import { format } from 'date-fns';
 
@@ -54,6 +56,8 @@ export default function POSDashboard() {
 	const [activeCategory, setActiveCategory] = useState(null);
 	const [showDiscountModal, setShowDiscountModal] = useState(false);
 	const [showPaymentModal, setShowPaymentModal] = useState(false);
+	const [showTransferModal, setShowTransferModal] = useState(false);
+	const [showCommentModal, setShowCommentModal] = useState(false);
 	const [paymentType, setPaymentType] = useState(null);
 	const [currentTime, setCurrentTime] = useState(new Date());
 	const [completedOrderForReceipt, setCompletedOrderForReceipt] = useState(null);
@@ -590,6 +594,13 @@ const handleCompletePayment = async (paymentDetails) => {
 
 					<div className='flex items-center space-x-2'>
 						<span className='text-sm text-gray-600'>{format(currentTime, 'HH:mm')}</span>
+						<button
+							onClick={() => navigate('/pos/login')}
+							className='px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50 transition-colors flex items-center space-x-1'
+						>
+							<Lock className='w-4 h-4' />
+							<span>Kilid</span>
+						</button>
 						<button
 							onClick={handleLogout}
 							className='px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50 transition-colors'

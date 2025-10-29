@@ -1,8 +1,13 @@
 import { Plus, Minus, Trash2 } from 'lucide-react';
+import { useSelector } from 'react-redux';
+import { checkPermission, PERMISSIONS } from '../../utils/permissions';
 
 export default function OrderItem({ item, onUpdateQuantity, onRemove }) {
+	const { user } = useSelector((state) => state.auth);
 	const productName = item.productName || item.name;
 	const isPending = !item.status || item.status === 'pending';
+	const canEdit = checkPermission(user, PERMISSIONS.CAN_EDIT_ORDER);
+	const canDelete = checkPermission(user, PERMISSIONS.CAN_DELETE_ORDER);
 
 	return (
 		<div className={`flex items-center gap-2 p-2 rounded-lg ${
@@ -23,9 +28,9 @@ export default function OrderItem({ item, onUpdateQuantity, onRemove }) {
 			<div className='flex items-center gap-1'>
 				<button
 					onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}
-					disabled={!isPending}
+					disabled={!isPending || !canEdit}
 					className={`p-1 border rounded ${
-						isPending
+						isPending && canEdit
 							? 'bg-white border-gray-300 hover:bg-gray-100'
 							: 'bg-gray-200 border-gray-300 cursor-not-allowed opacity-50'
 					}`}
@@ -35,9 +40,9 @@ export default function OrderItem({ item, onUpdateQuantity, onRemove }) {
 				<span className='text-sm font-semibold w-6 text-center'>{item.quantity}</span>
 				<button
 					onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
-					disabled={!isPending}
+					disabled={!isPending || !canEdit}
 					className={`p-1 border rounded ${
-						isPending
+						isPending && canEdit
 							? 'bg-white border-gray-300 hover:bg-gray-100'
 							: 'bg-gray-200 border-gray-300 cursor-not-allowed opacity-50'
 					}`}
@@ -50,9 +55,9 @@ export default function OrderItem({ item, onUpdateQuantity, onRemove }) {
 
 			<button
 				onClick={() => onRemove(item.id)}
-				disabled={!isPending}
+				disabled={!isPending || !canDelete}
 				className={`p-1 rounded ${
-					isPending
+					isPending && canDelete
 						? 'text-red-600 hover:bg-red-50'
 						: 'text-gray-400 cursor-not-allowed'
 				}`}

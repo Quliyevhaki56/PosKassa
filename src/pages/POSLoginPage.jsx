@@ -19,6 +19,18 @@ export default function POSLoginPage() {
 	const dispatch = useDispatch();
   
 	useEffect(() => {
+		const savedRestaurant = localStorage.getItem('pos_restaurant');
+		if (savedRestaurant) {
+			try {
+				const restaurantData = JSON.parse(savedRestaurant);
+				setRestaurantData(restaurantData);
+				setRestaurantUsername(restaurantData.username || '');
+				setStep('pin');
+			} catch (error) {
+				console.error('Error loading restaurant:', error);
+			}
+		}
+
 		const savedLockout = localStorage.getItem('login_lockout');
 		if (savedLockout) {
 			const lockoutTime = new Date(savedLockout);
@@ -78,10 +90,7 @@ console.log(restaurantUsername)
 			}
 
 			setRestaurantData(restaurantData);
-			localStorage.setItem('temp_restaurant', JSON.stringify({
-				id: restaurantData.id,
-				username: restaurantData.username
-			}));
+			localStorage.setItem('pos_restaurant', JSON.stringify(restaurantData));
 			setStep('pin');
 		} catch (error) {
 			console.error('Restaurant lookup error:', error);
@@ -110,7 +119,6 @@ console.log(restaurantUsername)
 				.select('*')
 				.eq('restaurant_id', restaurant.id)
 				.eq('pin_code', pinCode)
-				.eq('role', 'cashier') 
 				.eq('is_active', true)
 				.maybeSingle();
 
@@ -141,7 +149,6 @@ console.log(restaurantUsername)
 			setAttempts(0);
 			localStorage.removeItem('login_attempts');
 			localStorage.removeItem('login_lockout');
-			localStorage.removeItem('temp_restaurant');
 
 			dispatch(setUser(users));
 			dispatch(setRestaurant(restaurant));
@@ -164,7 +171,6 @@ console.log(restaurantUsername)
 		setStep('restaurant');
 		setPinCode('');
 		setRestaurantData(null);
-		localStorage.removeItem('temp_restaurant');
 	};
 
 	const getRemainingTime = () => {

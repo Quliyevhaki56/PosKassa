@@ -1,7 +1,9 @@
 import { Clock, Trash2, Receipt, CreditCard, Banknote, Split, Send, User, ArrowLeftRight, Percent, MessageSquare, RotateCcw } from 'lucide-react';
+import { useSelector } from 'react-redux';
 import { format } from 'date-fns';
 import OrderItemList from './OrderItemList';
 import OrderSummary from './OrderSummary';
+import { checkPermission, PERMISSIONS } from '../../utils/permissions';
 
 export default function OrderPanel({
 	selectedTable,
@@ -12,9 +14,17 @@ export default function OrderPanel({
 	onOpenDiscount,
 	onOpenPayment,
 	onSendToKitchen,
+	onOpenTransfer,
+	onOpenComment,
 	loadData,
 	isProcessingPayment
 }) {
+	const { user } = useSelector((state) => state.auth);
+
+	const canEditOrder = checkPermission(user, PERMISSIONS.CAN_EDIT_ORDER);
+	const canDeleteOrder = checkPermission(user, PERMISSIONS.CAN_DELETE_ORDER);
+	const canCheckout = checkPermission(user, PERMISSIONS.CAN_CHECKOUT);
+	const canApplyDiscount = checkPermission(user, PERMISSIONS.CAN_APPLY_DISCOUNT);
 	if (!selectedTable) {
 		return (
 			<div className='flex items-center justify-center h-full text-gray-500'>
@@ -66,7 +76,8 @@ export default function OrderPanel({
 						<span className='text-xs'>Müştəri</span>
 					</button>
 					<button
-						disabled={isProcessingPayment}
+						onClick={onOpenTransfer}
+						disabled={isProcessingPayment || !canEditOrder}
 						className='flex flex-col items-center justify-center p-2 border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50'
 					>
 						<ArrowLeftRight className='w-4 h-4 mb-1' />
@@ -74,13 +85,14 @@ export default function OrderPanel({
 					</button>
 					<button
 						onClick={onOpenDiscount}
-						disabled={isProcessingPayment}
+						disabled={isProcessingPayment || !canApplyDiscount}
 						className='flex flex-col items-center justify-center p-2 border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50'
 					>
 						<Percent className='w-4 h-4 mb-1' />
 						<span className='text-xs'>Endirim</span>
 					</button>
 					<button
+						onClick={onOpenComment}
 						disabled={isProcessingPayment}
 						className='flex flex-col items-center justify-center p-2 border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50'
 					>
@@ -88,7 +100,7 @@ export default function OrderPanel({
 						<span className='text-xs'>Qeyd</span>
 					</button>
 					<button
-						disabled={isProcessingPayment}
+						disabled={isProcessingPayment || !canDeleteOrder}
 						className='flex flex-col items-center justify-center p-2 border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50'
 					>
 						<RotateCcw className='w-4 h-4 mb-1' />
@@ -123,21 +135,21 @@ export default function OrderPanel({
 					<div className='grid grid-cols-3 gap-2'>
 						<button
 							onClick={() => onOpenPayment('cash')}
-							disabled={isProcessingPayment}
+							disabled={isProcessingPayment || !canCheckout}
 							className='py-3 px-2 text-sm bg-white border-2 border-green-500 text-green-600 rounded hover:bg-green-50 font-medium disabled:opacity-50'
 						>
 							Nağd
 						</button>
 						<button
 							onClick={() => onOpenPayment('card')}
-							disabled={isProcessingPayment}
+							disabled={isProcessingPayment || !canCheckout}
 							className='py-3 px-2 text-sm bg-white border-2 border-blue-500 text-blue-600 rounded hover:bg-blue-50 font-medium disabled:opacity-50'
 						>
 							Kart
 						</button>
 						<button
 							onClick={() => onOpenPayment('mixed')}
-							disabled={isProcessingPayment}
+							disabled={isProcessingPayment || !canCheckout}
 							className='py-3 px-2 text-sm bg-white border-2 border-orange-500 text-orange-600 rounded hover:bg-orange-50 font-medium disabled:opacity-50'
 						>
 							Qarışıq
