@@ -80,6 +80,12 @@ export default function POSDashboard() {
 	}, []);
 
 	useEffect(() => {
+		if (selectedTable?.id) {
+			localStorage.setItem('selectedTableId', selectedTable.id);
+		}
+	}, [selectedTable?.id]);
+
+	useEffect(() => {
 		if (!user || !restaurant) {
 			navigate('/pos/login');
 			return;
@@ -151,6 +157,16 @@ export default function POSDashboard() {
 				const tablesData = await getTables(restaurant.id);
 				const filteredTables = tablesData.filter(t => t.hall_id === firstHall.id);
 				dispatch(setTables(filteredTables));
+
+				const savedTableId = localStorage.getItem('selectedTableId');
+				if (savedTableId && filteredTables.some(t => t.id === savedTableId)) {
+					const savedTable = filteredTables.find(t => t.id === savedTableId);
+					dispatch(selectTable(savedTable));
+					const order = await getTableOrder(savedTable.id);
+					if (order) {
+						dispatch(setCurrentOrder(order));
+					}
+				}
 			}
 
 			dispatch(setCategories(categoriesData));
@@ -554,6 +570,95 @@ const handleCompletePayment = async (paymentDetails) => {
 		navigate('/pos/login');
 	};
 
+	const handleTransfer = async (toTableId, itemIds) => {
+		try {
+			if (!currentOrder?.id) return;
+
+			const order = await getTableOrder(selectedTable.id);
+			if (!order) return;
+
+			const itemsToTransfer = order.items.filter(item => itemIds.includes(item.id));
+			const itemsToKeep = order.items.filter(item => !itemIds.includes(item.id));
+
+			if (itemsToKeep.length === 0) {
+				toast.error('Ən azı bir məhsul qalmalıdır');
+				return;
+			}
+
+			const currentSubtotal = itemsToKeep.reduce((sum, item) => sum + item.subtotal, 0);
+			const discount = order.discount || 0;
+			const afterDiscount = currentSubtotal - discount;
+			const serviceChargeAmount = (afterDiscount * (serviceCharge || 0)) / 100;
+			const taxAmount = (afterDiscount * 18) / 100;
+			const newTotal = afterDiscount + taxAmount + serviceChargeAmount;
+
+			await updateOrder(order.id, {
+				items: itemsToKeep,
+				total_amount: newTotal,
+				tax: taxAmount,
+			});
+
+			const toTableOrder = await getTableOrder(toTableId);
+			if (toTableOrder) {
+				const transferredSubtotal = itemsToTransfer.reduce((sum, item) => sum + item.subtotal, 0);
+				const toTableSubtotal = toTableOrder.items.reduce((sum, item) => sum + item.subtotal, 0) + transferredSubtotal;
+				const toTableTax = (toTableSubtotal * 18) / 100;
+				const toTableTotal = toTableSubtotal + toTableTax;
+
+				await updateOrder(toTableOrder.id, {
+					items: [...toTableOrder.items, ...itemsToTransfer],
+					total_amount: toTableTotal,
+					tax: toTableTax,
+				});
+			} else {
+				const transferredSubtotal = itemsToTransfer.reduce((sum, item) => sum + item.subtotal, 0);
+				const toTableTax = (transferredSubtotal * 18) / 100;
+				const toTableTotal = transferredSubtotal + toTableTax;
+
+				const newOrder = await createOrGetOrder(toTableId, {
+					items: itemsToTransfer,
+					total_amount: toTableTotal,
+					tax: toTableTax,
+				});
+			}
+
+			dispatch(setCurrentOrder({
+				...order,
+				items: itemsToKeep,
+				total: newTotal,
+				subtotal: currentSubtotal,
+				service_charge: serviceChargeAmount,
+			}));
+
+			setShowTransferModal(false);
+			toast.success('Məhsullar ötürüldü');
+		} catch (error) {
+			console.error('Error transferring items:', error);
+			toast.error('Ötürmə xətası');
+		}
+	};
+
+	const handleSaveComment = async (comment) => {
+		try {
+			if (!currentOrder?.id) return;
+
+			await updateOrder(currentOrder.id, {
+				notes: comment,
+			});
+
+			dispatch(setCurrentOrder({
+				...currentOrder,
+				notes: comment,
+			}));
+
+			setShowCommentModal(false);
+			toast.success('Qeyd yadda saxlanıldı');
+		} catch (error) {
+			console.error('Error saving comment:', error);
+			toast.error('Xəta baş verdi');
+		}
+	};
+
 
 	return (
 		<div className='h-screen flex flex-col bg-gray-100'>
@@ -670,6 +775,21 @@ const handleCompletePayment = async (paymentDetails) => {
 				onUnpaidClose={handleUnpaidClose}
 				order={currentOrder}
 				paymentType={paymentType}
+			/>
+
+			<TransferModal
+				isOpen={showTransferModal}
+				onClose={() => setShowTransferModal(false)}
+				onTransfer={handleTransfer}
+				tables={tables}
+				selectedTableId={selectedTable?.id}
+			/>
+
+			<CommentModal
+				isOpen={showCommentModal}
+				onClose={() => setShowCommentModal(false)}
+				onSave={handleSaveComment}
+				currentComment={currentOrder?.notes || ''}
 			/>
 
 			{completedOrderForReceipt && (

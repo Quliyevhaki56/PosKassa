@@ -297,11 +297,11 @@ export const getTablesByHall = async (restaurantId, hallId) => {
 	return data || [];
 };
 
-export const handleSendToKitchen = async (currentOrder, selectedTable, loadData) => {
+export const handleSendToKitchen = async (currentOrder, selectedTable) => {
 	try {
 		if (!currentOrder.id) {
 			toast.error('Sifariş ID tapılmadı');
-			return;
+			return currentOrder;
 		}
 
 		const updatedItems = currentOrder.items.map(item => {
@@ -320,6 +320,26 @@ export const handleSendToKitchen = async (currentOrder, selectedTable, loadData)
 			})
 			.eq('id', currentOrder.id);
 
+		const groupedByDepartment = {};
+		updatedItems.forEach(item => {
+			const deptId = item.department_id || 'default';
+			if (!groupedByDepartment[deptId]) {
+				groupedByDepartment[deptId] = [];
+			}
+			groupedByDepartment[deptId].push(item);
+		});
+
+		for (const [deptId, items] of Object.entries(groupedByDepartment)) {
+			await supabase.from('kitchen_orders').insert({
+				order_id: currentOrder.id,
+				department_id: deptId === 'default' ? null : deptId,
+				items: items,
+				status: 'pending',
+				table_number: selectedTable.table_number,
+				notes: currentOrder.notes || ''
+			});
+		}
+
 		await supabase
 			.from('tables')
 			.update({
@@ -330,9 +350,10 @@ export const handleSendToKitchen = async (currentOrder, selectedTable, loadData)
 
 		toast.success('Sifariş mətbəxə göndərildi');
 
-		if (loadData) loadData();
+		return { ...currentOrder, items: updatedItems, status: 'in_progress' };
 	} catch (error) {
 		toast.error('Xəta baş verdi');
 		console.error(error);
+		return currentOrder;
 	}
 };
