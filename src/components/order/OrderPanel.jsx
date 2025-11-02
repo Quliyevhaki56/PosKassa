@@ -32,7 +32,7 @@ export default function OrderPanel({
 			</div>
 		);
 	}
-
+  console.log(onOpenTransfer)
 	const hasPendingItems = currentOrder?.items?.some(item => item.status === 'pending');
   console.log(currentOrder)
 	const canSendToKitchen = currentOrder &&
