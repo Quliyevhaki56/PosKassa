@@ -1,4 +1,4 @@
-import { Clock, Trash2, Receipt, CreditCard, Banknote, Split, Send, User, ArrowLeftRight, Percent, MessageSquare, RotateCcw } from 'lucide-react';
+ import { Clock, Trash2, Receipt, CreditCard, Banknote, Split, Send, User, ArrowLeftRight, Percent, MessageSquare, RotateCcw } from 'lucide-react';
 import { useSelector } from 'react-redux';
 import { format } from 'date-fns';
 import OrderItemList from './OrderItemList';
@@ -32,7 +32,7 @@ export default function OrderPanel({
 			</div>
 		);
 	}
-  console.log(onOpenTransfer)
+
 	const hasPendingItems = currentOrder?.items?.some(item => item.status === 'pending');
   console.log(currentOrder)
 	const canSendToKitchen = currentOrder &&
