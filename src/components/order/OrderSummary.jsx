@@ -11,7 +11,7 @@ export default function OrderSummary({ order }) {
 	const serviceCharge = order.service_charge || order.serviceCharge || 0;
 	const tax = order.tax || 0;
 	const total = order.total || order.total_amount || 0;
-
+  console.log(order)
 	return (
 		<div className='bg-gray-50 rounded-lg p-3 space-y-2'>
 			<div className='flex justify-between text-sm text-gray-700'>
