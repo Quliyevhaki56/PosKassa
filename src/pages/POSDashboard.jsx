@@ -577,8 +577,8 @@ const handleCompletePayment = async (paymentDetails) => {
 			const order = await getTableOrder(selectedTable.id);
 			if (!order) return;
 
-			const itemsToTransfer = order.items.filter(item => itemIds.includes(item.id));
-			const itemsToKeep = order.items.filter(item => !itemIds.includes(item.id));
+			const itemsToTransfer = order?.items?.filter(item => itemIds.includes(item.id));
+			const itemsToKeep = order?.items?.filter(item => !itemIds.includes(item.id));
 
 			if (itemsToKeep.length === 0) {
 				toast.error('Ən azı bir məhsul qalmalıdır');
