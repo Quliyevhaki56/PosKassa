@@ -118,7 +118,7 @@ export default function OrderPanel({
 
 					{canSendToKitchen && (
 						<button
-							onClick={() => onSendToKitchen(currentOrder, selectedTable, loadData)}
+							onClick={onSendToKitchen}
 							disabled={isProcessingPayment}
 							className='w-full py-2 text-sm border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50'
 						>

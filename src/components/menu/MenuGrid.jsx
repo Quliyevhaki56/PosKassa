@@ -18,6 +18,7 @@ export default function MenuGrid({
 		}
 
 		const subCategories = categories.filter(c => c.parent_id === activeCategory);
+
 		const categoryProducts = products.filter(p => {
 			if (subCategories.length > 0) {
 				const allCatIds = [activeCategory, ...subCategories.map(sc => sc.id)];
@@ -48,8 +49,8 @@ export default function MenuGrid({
 
 	const handleItemClick = (item) => {
 		if (item.type === 'category' || item.type === 'subcategory') {
-			onSelectCategory(item.data.id);
 			setCurrentPage(1);
+			onSelectCategory(item.data.id);
 		} else if (item.type === 'product') {
 			onAddProduct(item.data);
 		}

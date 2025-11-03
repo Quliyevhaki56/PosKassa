@@ -1,9 +1,9 @@
 import { X } from 'lucide-react';
 
-export default function TransferModal({ isOpen, onClose, onTransfer, tables, currentTableId }) {
+export default function TransferModal({ isOpen, onClose, onTransfer, tables, selectedTableId }) {
 	if (!isOpen) return null;
 
-	const availableTables = tables.filter(t => t.id !== currentTableId && t.status === 'empty');
+	const availableTables = tables.filter(t => t.id !== selectedTableId && t.status === 'empty');
 
 	const handleTransfer = (targetTableId) => {
 		onTransfer(targetTableId);
