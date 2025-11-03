@@ -1,4 +1,4 @@
- import { Clock, Trash2, Receipt, CreditCard, Banknote, Split, Send, User, ArrowLeftRight, Percent, MessageSquare, RotateCcw } from 'lucide-react';
+import { Clock, Trash2, Receipt, CreditCard, Banknote, Split, Send, User, ArrowLeftRight, Percent, MessageSquare, RotateCcw } from 'lucide-react';
 import { useSelector } from 'react-redux';
 import { format } from 'date-fns';
 import OrderItemList from './OrderItemList';
@@ -17,7 +17,7 @@ export default function OrderPanel({
 	onOpenTransfer,
 	onOpenComment,
 	loadData,
-	isProcessingPayment
+	isProcessingPayment,
 }) {
 	const { user } = useSelector((state) => state.auth);
 
@@ -33,11 +33,9 @@ export default function OrderPanel({
 		);
 	}
 
-	const hasPendingItems = currentOrder?.items?.some(item => item.status === 'pending');
-  console.log(currentOrder)
-	const canSendToKitchen = currentOrder &&
-		currentOrder?.items?.length > 0 &&
-		hasPendingItems;
+	const hasPendingItems = currentOrder?.items?.some((item) => item.status === 'pending');
+	// console.log(currentOrder)
+	const canSendToKitchen = currentOrder && currentOrder?.items?.length > 0 && hasPendingItems;
 
 	const getFormattedTime = () => {
 		if (!currentOrder) return '--:--';
@@ -111,11 +109,7 @@ export default function OrderPanel({
 
 			{/* Order Items */}
 			<div className='flex-1 overflow-y-auto p-4'>
-				<OrderItemList 
-					items={currentOrder?.items || []} 
-					onUpdateQuantity={onUpdateQuantity} 
-					onRemove={onRemove} 
-				/>
+				<OrderItemList items={currentOrder?.items || []} onUpdateQuantity={onUpdateQuantity} onRemove={onRemove} />
 			</div>
 
 			{currentOrder && currentOrder.items?.length > 0 && (
