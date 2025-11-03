@@ -732,7 +732,7 @@ const handleCompletePayment = async (paymentDetails) => {
 								onClearOrder={handleClearOrder}
 								onOpenDiscount={() => setShowDiscountModal(true)}
 								onOpenPayment={handleOpenPayment}
-								// onSendToKitchen={handleSendToKitchenWrapper}
+								onSendToKitchen={handleSendToKitchen}
 								onOpenTransfer={() => setShowTransferModal(true)}
 								onOpenComment={() => setShowCommentModal(true)}
 								loadData={loadData}
